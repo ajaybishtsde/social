@@ -2,14 +2,18 @@ import express from 'express';
 import dotenv from 'dotenv';
 import AppError from './utils/appError';
 import { globalErrorHandler } from './utils/globalErrorHandler';
-import connectDB from './database/mongoConnection';
-
+import connectDB from './config/connectDb';
+import userRoutes from './routes/user';
+import bodyParser = require('body-parser');
 // Load environment variables from .env file
 dotenv.config();
 
 const app = express();
 const uri = process.env.MONGODB_URI || '';
+app.use(bodyParser.urlencoded({ extended: false }));
 
+// parse application/json
+app.use(bodyParser.json());
 // Ensure the database connection is established before starting the server
 connectDB(uri)
   .then(() => {
@@ -21,7 +25,7 @@ connectDB(uri)
         message: 'Server working properly',
       });
     });
-
+    app.use('/user', userRoutes);
     app.all('*', (req, res, next) => {
       next(new AppError(`Requested URL ${req.originalUrl} is not found`, 404));
     });
