@@ -5,6 +5,7 @@ import { globalErrorHandler } from './utils/globalErrorHandler';
 import connectDB from './config/connectDb';
 import userRoutes from './routes/user';
 import bodyParser = require('body-parser');
+import authRoutes from './routes/auth';
 // Load environment variables from .env file
 dotenv.config();
 
@@ -26,6 +27,7 @@ connectDB(uri)
       });
     });
     app.use('/user', userRoutes);
+    app.use('/auth', authRoutes);
     app.all('*', (req, res, next) => {
       next(new AppError(`Requested URL ${req.originalUrl} is not found`, 404));
     });

@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
+import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { UserModel } from '../models/user';
 import { AuthModel } from '../models/auth';
+import { sendVerificationEmail } from '../utils/verificationEmail';
 
 // Create new user
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
@@ -18,15 +20,19 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Generate a verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+
     // Create the user
     const user = new UserModel({
       name,
       email,
       phone,
       is_email_verified: false,
+      verification_token: verificationToken,
       is_phone_verified: false,
       is_need_to_change_password: false,
-      is_active: true, // Set to true initially, or handle activation separately
+      is_active: true,
       role,
     });
 
@@ -39,6 +45,8 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     });
 
     await auth.save();
+
+    await sendVerificationEmail(email, verificationToken);
 
     return res.status(201).json({ message: 'User created successfully', user });
   } catch (err) {

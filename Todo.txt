@@ -1,1 +1,4 @@
-Check for roles in user modal
+Add seed in db
+Check for city and roles in user modal
+implement index.ts in routes
+check env for nodemailer

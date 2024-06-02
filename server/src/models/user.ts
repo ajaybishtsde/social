@@ -5,12 +5,15 @@ interface IUser extends Document {
   location: mongoose.Types.ObjectId;
   phone: string;
   is_email_verified: boolean;
+  verification_token: string | null;
   is_phone_verified: boolean;
   is_need_to_change_password: boolean;
   //   role: mongoose.Types.ObjectId;
   role: string;
   is_active: boolean;
   deleted_at: Date | null;
+  followers: mongoose.Types.ObjectId;
+  blocked_accounts: mongoose.Types.ObjectId;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -37,6 +40,10 @@ const UserSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    verification_token: {
+      type: String,
+      default: null,
+    },
     is_phone_verified: {
       type: Boolean,
       default: false,
@@ -57,6 +64,18 @@ const UserSchema = new Schema<IUser>(
       type: Date,
       default: null,
     },
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'users',
+      },
+    ],
+    blocked_accounts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'users',
+      },
+    ],
   },
   { timestamps: true }
 );

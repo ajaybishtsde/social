@@ -31,7 +31,7 @@ export const validateUserData = async (req: Request, res: Response, next: NextFu
   });
 
   try {
-    await schema.validateAsync(req.body, { abortEarly: false });
+    await schema.validateAsync(req.body);
     next();
   } catch (error: any) {
     return res.status(400).json({
