@@ -7,6 +7,8 @@ interface IUser extends Document {
   is_email_verified: boolean;
   verification_token: string | null;
   is_phone_verified: boolean;
+  otp: string | null;
+  otp_expiration: number | null;
   is_need_to_change_password: boolean;
   //   role: mongoose.Types.ObjectId;
   role: string;
