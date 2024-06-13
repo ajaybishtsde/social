@@ -54,7 +54,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     session.endSession();
     return res.status(201).json({ message: 'User created successfully', user });
   } catch (error) {
-    console.log('error,,,,,,,,,,,,,,,,,,,,');
     await session.abortTransaction();
     session.endSession();
     next(error);

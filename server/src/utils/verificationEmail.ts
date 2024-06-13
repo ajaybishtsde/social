@@ -1,15 +1,14 @@
 import nodemailer from 'nodemailer';
-import crypto from 'crypto';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'ajay.bisht.inaraconsultancy@gmail.com', // Your email address
-    pass: 'icuqfixroxnhmwgy', // Your email password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
-export const sendVerificationEmail = async (userEmail: string, verificationToken: string): Promise<void> => {
+export const sendVerificationEmail = async (userEmail: string, verificationToken: string): Promise<any> => {
   const verificationUrl = `http://localhost:${process.env.PORT || 3000}/auth/verify-email?token=${verificationToken}`;
 
   const mailOptions = {
@@ -20,6 +19,5 @@ export const sendVerificationEmail = async (userEmail: string, verificationToken
            <p>Please click the link below to verify your email address:</p>
            <a href="${verificationUrl}">Verify Email</a>`,
   };
-  console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS, ' process.env.EMAIL_PASS');
-  await transporter.sendMail(mailOptions);
+  return await transporter.sendMail(mailOptions);
 };

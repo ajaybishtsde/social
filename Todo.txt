@@ -1,7 +1,5 @@
 Add seed in db
 Check for city and roles in user modal
 implement index.ts in routes
-check env for nodemailer
 correct createAsync function in all places
-check this controller requestOTP 
-check for any used in promise
+check for "any" used in promise
