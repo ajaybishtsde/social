@@ -1,29 +1,31 @@
 import { Request, Response, NextFunction } from 'express';
+import { startSession } from 'mongoose';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { UserModel } from '../models/user';
 import { AuthModel } from '../models/auth';
 import { sendVerificationEmail } from '../utils/verificationEmail';
-
+import AppError from '../utils/appError';
 // Create new user
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-  console.log('request', req.body);
-  const { name, email, phone, password, role } = req.body;
-
+  const session = await startSession();
+  session.startTransaction();
   try {
-    // Check if the email or phone number already exists
+    const { name, email, phone, password, role } = req.body;
+
+    // Check email or phone number already exists
     const existingUser = await UserModel.findOne({ $or: [{ email }, { phone }] });
     if (existingUser) {
-      return res.status(409).json({ message: 'Email or phone number already in use' });
+      return next(new AppError('Email or phone number already in use', 409));
     }
 
-    // Hash the password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Generate a verification token
+    // Generate verification token
     const verificationToken = crypto.randomBytes(32).toString('hex');
 
-    // Create the user
+    // Create user
     const user = new UserModel({
       name,
       email,
@@ -36,7 +38,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
       role,
     });
 
-    await user.save();
+    const createUserResult = await user.save();
 
     // Create the auth record
     const auth = new AuthModel({
@@ -44,12 +46,17 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
       user_id: user._id,
     });
 
-    await auth.save();
-
+    const authResult = await auth.save();
+    console.log(createUserResult, authResult);
     await sendVerificationEmail(email, verificationToken);
 
+    await session.commitTransaction();
+    session.endSession();
     return res.status(201).json({ message: 'User created successfully', user });
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    console.log('error,,,,,,,,,,,,,,,,,,,,');
+    await session.abortTransaction();
+    session.endSession();
+    next(error);
   }
 };

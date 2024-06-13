@@ -3,4 +3,5 @@ Check for city and roles in user modal
 implement index.ts in routes
 check env for nodemailer
 correct createAsync function in all places
-twilio envs are also not working chek them
+check this controller requestOTP 
+check for any used in promise

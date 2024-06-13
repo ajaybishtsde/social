@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
 import AppError from './utils/appError';
 import { globalErrorHandler } from './utils/globalErrorHandler';
 import connectDB from './config/connectDb';
@@ -7,7 +8,7 @@ import userRoutes from './routes/user';
 import bodyParser = require('body-parser');
 import authRoutes from './routes/auth';
 // Load environment variables from .env file
-dotenv.config();
+
 
 const app = express();
 const uri = process.env.MONGODB_URI || '';
