@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { startSession } from 'mongoose';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { UserModel } from '../models/user';
@@ -8,8 +7,6 @@ import { sendVerificationEmail } from '../utils/verificationEmail';
 import AppError from '../utils/appError';
 // Create new user
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-  const session = await startSession();
-  session.startTransaction();
   try {
     const { name, email, phone, password, role } = req.body;
 
@@ -50,12 +47,8 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
     console.log(createUserResult, authResult);
     await sendVerificationEmail(email, verificationToken);
 
-    await session.commitTransaction();
-    session.endSession();
-    return res.status(201).json({ message: 'User created successfully', user });
+    return res.status(201).json({ message: 'User created successfully', status: true });
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 };

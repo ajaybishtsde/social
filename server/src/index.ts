@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 import AppError from './utils/appError';
@@ -8,10 +9,13 @@ import userRoutes from './routes/user';
 import bodyParser = require('body-parser');
 import authRoutes from './routes/auth';
 // Load environment variables from .env file
-
-
+const corsOptions = {
+  origin: '*',
+};
 const app = express();
-const uri = process.env.MONGODB_URI || '';
+app.use(cors(corsOptions));
+console.log("process.env.MONGODB_URI",process.env.MONGODB_URI)
+const uri = process.env.MONGODB_URI || 'mongodb+srv://ajaybishtsde:ajaybishtsde@cluster0.561f4kq.mongodb.net/social';
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
@@ -36,7 +40,7 @@ connectDB(uri)
     app.use(globalErrorHandler);
 
     app.listen(port, () => {
-      console.log(`App is listening at http://localhost:${port}`);
+      console.log(`App is listening at ${port}`);
     });
 
     process.on('unhandledRejection', err => {
@@ -47,5 +51,5 @@ connectDB(uri)
   })
   .catch(err => {
     console.error('Failed to connect to MongoDB', err);
-    process.exit(1); // Exit the process if the database connection fails
+    process.exit(1);
   });

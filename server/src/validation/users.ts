@@ -16,14 +16,7 @@ export const validateUserData = async (req: Request, res: Response, next: NextFu
       'string.email': 'Email must be a valid email address',
       'string.empty': 'Email cannot be empty',
     }),
-    role: Joi.string().required().messages({
-      'any.required': 'Role is required',
-      'string.empty': 'Role cannot be empty',
-    }),
-    is_email_verified: Joi.required(),
-    is_phone_verified: Joi.required(),
-    is_need_to_change_password: Joi.required(),
-    is_active: Joi.required(),
+
     password: Joi.string().required().messages({
       'any.required': 'Password is required',
       'string.empty': 'Password cannot be empty',

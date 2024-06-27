@@ -1,18 +1,18 @@
-import {
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Dummy from "../Dummy";
 import Users from "../Users";
 import AddUserForm from "../components/AddUserForm";
 import Admin from "../Admin";
 import PageNotFound from "../PageNotFound";
+import DynamicRoute from "../DynamicRoute";
+import Register from "../Register";
+import Dashboard from "../Dashboard";
 
 const AppRouter = () => {
   const router = createBrowserRouter([
     {
       path: "admin",
-      element: <Admin/>,
+      element: <Admin />,
       children: [
         {
           path: "dashboard",
@@ -26,7 +26,19 @@ const AppRouter = () => {
           path: "addusers",
           element: <AddUserForm />,
         },
+        {
+          path: "dynamicRoute/:id",
+          element: <DynamicRoute />,
+        },
       ],
+    },
+    {
+      path: "/",
+      element: <Register />,
+    },
+    {
+      path: "/dashboard",
+      element: <Dashboard />,
     },
     {
       path: "*",
