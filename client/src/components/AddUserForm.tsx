@@ -18,7 +18,7 @@ const AddUserForm = () => {
     console.log(response, payload);
   };
 
-  const { isLoading, isSuccess, error, mutate } = useMutation({
+  const {  mutate } = useMutation({
     mutationFn: (payload: any) => AddUser(payload),
     onSuccess: (data) => {
       console.log(data);

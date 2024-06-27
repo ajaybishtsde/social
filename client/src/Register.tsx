@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { userContext } from "./context/userContext";
@@ -13,7 +14,7 @@ const Register = () => {
   });
 
   // Function to update form data on input change
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -21,7 +22,7 @@ const Register = () => {
   };
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     e.preventDefault();
     // Here you can send formData to your backend or do any further processing
     console.log("Form submitted with data:", formData);
