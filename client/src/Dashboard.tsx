@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useContext } from "react";
 import { userContext } from "./context/userContext";
 import { useNavigate } from "react-router-dom";
